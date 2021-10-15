@@ -21,6 +21,24 @@ def read_template(filename) -> str:
     return content
 
 
+def file_object(file_name):
+    try:
+        with open(file_name, "rb") as attachment:
+            part = MIMEBase("application", "octet-stream")
+            part.set_payload(attachment.read())
+
+        encoders.encode_base64(part)
+        part.add_header(
+            "Content-Disposition",
+            f"attachment; filename= {file_name}",
+        )
+
+        return part
+    except Exception as e:
+        print(f'Oh no! We didnt found the attachment!n{e}')
+        exit()
+
+
 sender_email = "your gmail address"
 sender_name = "your Name"
 password = ""
@@ -32,30 +50,16 @@ receiver_names = e["Name"].values
 for receiver_email, receiver_name in zip(receiver_emails, receiver_names):
     print("Sending to " + receiver_name)
     msg = MIMEMultipart()
-    msg['Subject'] = '[Certificate] [Microsoft Club SIST] | ' + receiver_name
+    msg['Subject'] = '[Microsoft Club SIST] | Welcome to the Club, ' + \
+        receiver_name + "!!"
     msg['From'] = formataddr((sender_name, sender_email))
     msg['To'] = formataddr((receiver_name, receiver_email))
-    mail_content = read_template('template.html')
+    mail_content = read_template('confirmation.html')
     mail_content = mail_content.replace('{mail_receiver}', receiver_name)
     msg.attach(MIMEText(mail_content, 'html'))
 
-    filename = receiver_name + ".pdf"
-
-    try:
-        with open(filename, "rb") as attachment:
-            part = MIMEBase("application", "octet-stream")
-            part.set_payload(attachment.read())
-
-        encoders.encode_base64(part)
-        part.add_header(
-            "Content-Disposition",
-            f"attachment; filename= {filename}",
-        )
-
-        msg.attach(part)
-    except Exception as e:
-        print(f'Oh no! We didnt found the attachment!n{e}')
-        break
+    # filename = "file.pdf"
+    # msg.attach(file_object(filename))
 
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
