@@ -39,8 +39,8 @@ def file_object(file_name):
         exit()
 
 
-sender_email = "your gmail address"
-sender_name = "your Name"
+sender_email = ""
+sender_name = ""
 password = ""
 
 name_of_the_event = input("Name of the event: ")
@@ -56,11 +56,10 @@ certificate_links = e["certificates"].values
 for receiver_email, receiver_name, certificate_link in zip(receiver_emails, receiver_names, certificate_links):
     print("Sending to " + receiver_name)
     msg = MIMEMultipart()
-    msg['Subject'] = mail_sub + \
-        receiver_name + "!!"
+    msg['Subject'] = mail_sub
     msg['From'] = formataddr((sender_name, sender_email))
     msg['To'] = formataddr((receiver_name, receiver_email))
-    mail_content = read_template('confirmation.html')
+    mail_content = read_template('template.html')
     mail_content = mail_content.replace('{reciever_name}', receiver_name)
     mail_content = mail_content.replace('{event_name}', name_of_the_event)
     mail_content = mail_content.replace('{rec_link}', link_of_the_recording)
