@@ -39,35 +39,28 @@ def file_object(file_name):
         exit()
 
 
-sender_email = ""
-sender_name = ""
-password = ""
+mail_subject = "Your subject"
+sender_email = "your mail"
+sender_name = "Your name"
+password = "haahahha"
+template_file = "template.html"
+csv_file = "details.csv"
 
-name_of_the_event = input("Name of the event: ")
-mail_sub = input("Subject of the mail: ")
-link_of_the_recording = input("Recording link: ")
-link_of_google_form = input("Club join form link: ")
-
-e = pd.read_csv("details.csv")
-receiver_emails = e["EmailAddress"].values
+e = pd.read_csv(csv_file)
+receiver_emails = e['EmailAddress'].values
 receiver_names = e["Name"].values
-certificate_links = e["certificates"].values
 
-for receiver_email, receiver_name, certificate_link in zip(receiver_emails, receiver_names, certificate_links):
+for receiver_email, receiver_name in zip(receiver_emails, receiver_names):
     print("Sending to " + receiver_name)
     msg = MIMEMultipart()
-    msg['Subject'] = mail_sub
+    msg['Subject'] = mail_subject
     msg['From'] = formataddr((sender_name, sender_email))
     msg['To'] = formataddr((receiver_name, receiver_email))
-    mail_content = read_template('template.html')
-    mail_content = mail_content.replace('{reciever_name}', receiver_name)
-    mail_content = mail_content.replace('{event_name}', name_of_the_event)
-    mail_content = mail_content.replace('{rec_link}', link_of_the_recording)
-    mail_content = mail_content.replace('{cert_link}', certificate_link)
-    mail_content = mail_content.replace('{join_link}', link_of_google_form)
+    mail_content = read_template(template_file)
+    mail_content = mail_content.replace('{mail_receiver}', receiver_name)
     msg.attach(MIMEText(mail_content, 'html'))
 
-    # filename = "file.pdf"
+    # filename = "filename.pdf"
     # msg.attach(file_object(filename))
 
     try:
