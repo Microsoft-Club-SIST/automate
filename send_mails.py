@@ -15,7 +15,7 @@ def read_template(filename) -> str:
     """
     Reads a file completely and returns it as a string.
     """
-    filehandle = open(filename, 'r')
+    filehandle = open(filename, 'r', encoding='utf-8')
     content = filehandle.read()
     filehandle.close()
     return content
